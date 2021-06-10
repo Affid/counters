@@ -11,7 +11,7 @@ import java.util.Map;
 public class DefaultCounterManager implements CounterManager {
     private static final int NAME_LENGTH = 10;
 
-    private Map<String, Counter> counters = new HashMap<>();
+    private final Map<String, Counter> counters = new HashMap<>();
 
     @Override
     public boolean contains(String key) {

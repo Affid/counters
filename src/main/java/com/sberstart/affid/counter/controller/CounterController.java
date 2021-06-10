@@ -5,7 +5,6 @@ import com.sberstart.affid.counter.DefaultCounterManager;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,16 +18,16 @@ import java.util.Map;
 
 @RestController
 public class CounterController {
+    public static final int SESSION_ID_LENGTH = 15;
     private static final String SESSION = "JSESSIONID";
     private static final Map<String, CounterManager> MANAGERS = new HashMap<>();
-    public static final int SESSION_ID_LENGTH = 15;
 
     @GetMapping("/login")
     public RedirectView login(HttpServletResponse response) {
         String seesionId = getUniqueName();
         MANAGERS.put(seesionId, new DefaultCounterManager());
         Cookie cookie = new Cookie("JSESSIONID", seesionId);
-        cookie.setMaxAge(30*60); // expires in 30 mins
+        cookie.setMaxAge(30 * 60); // expires in 30 mins
         cookie.setSecure(true);
         cookie.setPath("/");
         response.addCookie(cookie);
@@ -51,7 +50,7 @@ public class CounterController {
     @GetMapping("/counter/{counter}")
     public ResponseEntity<String> get(@CookieValue(value = "JSESSIONID") String session, @PathVariable("counter") String counter) {
         CounterManager manager = MANAGERS.get(session);
-        if(!manager.contains(counter)){
+        if (!manager.contains(counter)) {
             ResponseEntity.notFound();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(counter + " : " + manager.get(counter).getValue());
@@ -67,7 +66,7 @@ public class CounterController {
     @GetMapping("/counter/{counter}/remove")
     public ResponseEntity<String> remove(@CookieValue(value = "JSESSIONID") String session, @PathVariable("counter") String counter) {
         CounterManager manager = MANAGERS.get(session);
-        if(!manager.contains(counter)){
+        if (!manager.contains(counter)) {
             ResponseEntity.notFound();
         }
         manager.remove(counter);

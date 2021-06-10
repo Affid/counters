@@ -4,11 +4,11 @@ public class Counter {
 
     private Integer value = 0;
 
-    public void increase(){
+    public void increase() {
         this.value++;
     }
 
-    public Integer getValue(){
+    public Integer getValue() {
         return this.value;
     }
 }
